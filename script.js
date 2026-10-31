@@ -62,9 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // Evento ao mudar o seletor de Taludes
   const selector = document.getElementById("talude-selector");
-  selector.addEventListener("change", function (e) {
-    updateDashboard(e.target.value);
-  });
+  if (selector) {
+    selector.addEventListener("change", function (e) {
+      updateDashboard(e.target.value);
+    });
+  }
 });
 
 function initChart() {

@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoSolos - Monitoramento Geotécnico</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Solum Engenharia - Monitoramento Geotécnico</title>
+  <!-- Força a recarga do CSS sem cache -->
+  <link rel="stylesheet" href="style.css?v=3">
   <!-- Chart.js para os gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Lucide Icons -->
@@ -13,7 +14,9 @@
 <body>
   <div class="app-container">
     
-    <div class="sidebar-header">
+    <!-- Sidebar / Menu Lateral Escuro -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
         <div class="logo-icon">
           <i data-lucide="mountain-snow"></i>
         </div>
@@ -124,7 +127,7 @@
             <div class="chart-header">
               <div class="chart-title">
                 <i data-lucide="trending-up"></i>
-                <h3>Histórico das Medições - <span id="chart-talude-name">Talude 01</span></h3>
+                <h3>Histórico das Medições - <span id="chart-talude-name">Talude 01 (Norte)</span></h3>
               </div>
               <div class="time-filter">
                 <button class="filter-btn active">24h</button>
@@ -202,7 +205,7 @@
         <div class="notice-item">
           <i data-lucide="info" class="info-blue"></i>
           <div>
-            <strong>Monitoramento Multi-Talude GeoSolos</strong>
+            <strong>Monitoramento Multi-Talude Solum Engenharia</strong>
             <p>Selecione o local desejado no painel lateral para alternar a telemetria entre diferentes encostas.</p>
           </div>
         </div>
