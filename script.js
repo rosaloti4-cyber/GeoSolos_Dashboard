@@ -1,137 +1,70 @@
-import { database, ref, onValue } from "./firebase.js";
+document.addEventListener("DOMContentLoaded", function () {
+  const ctx = document.getElementById("medicoesChart").getContext("2d");
 
-// Função para injetar os dados de demonstração assim que a página carregar
-function carregarDadosDemonstracao() {
-    const humidityEl = document.getElementById("humidityValue");
-    const saturationEl = document.getElementById("saturationValue");
-    const lastUpdateEl = document.getElementById("lastUpdate");
-    const textConnectionEl = document.getElementById("textConnection");
-    const dotConnectionEl = document.getElementById("dotConnection");
+  // Dados do gráfico simulando as medições
+  const data = {
+    labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00"],
+    datasets: [
+      {
+        label: "Umidade (%)",
+        data: [18.2, 18.5, 18.3, 18.1, 18.4, 18.6, 18.5],
+        borderColor: "#2563eb",
+        backgroundColor: "#2563eb",
+        borderWidth: 2,
+        pointRadius: 3,
+        tension: 0.3
+      },
+      {
+        label: "Saturação (%)",
+        data: [65.0, 65.5, 65.2, 65.3, 65.8, 65.1, 65.3],
+        borderColor: "#f59e0b",
+        backgroundColor: "#f59e0b",
+        borderWidth: 2,
+        pointRadius: 3,
+        tension: 0.3
+      }
+    ]
+  };
 
-    if (humidityEl) humidityEl.textContent = "18.5";
-    if (saturationEl) saturationEl.textContent = "52.3";
-    
-    const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    if (lastUpdateEl) lastUpdateEl.textContent = horaAtual + " (Modo Demonstrativo)";
-    
-    if (textConnectionEl) textConnectionEl.textContent = "Conectado via IoT";
-    if (dotConnectionEl) dotConnectionEl.style.background = "#10b981";
-    
-    // Define o farol como seguro por defeito na demonstração
-    if (typeof simularFarol === 'function') {
-        simularFarol('verde');
-    }
-}
-
-// Executa a demonstração ao carregar o DOM
-document.addEventListener("DOMContentLoaded", () => {
-    carregarDadosDemonstracao();
-});
-
-// Inicialização do Gráfico (Chart.js)
-const canvasElement = document.getElementById('monitoringChart');
-let monitoringChart = null;
-
-if (canvasElement) {
-    const ctx = canvasElement.getContext('2d');
-    monitoringChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
-            datasets: [
-                {
-                    label: 'Umidade Estimada (%)',
-                    data: [16.2, 16.8, 17.1, 17.5, 18.0, 18.2, 18.5],
-                    borderColor: '#176b87',
-                    backgroundColor: 'rgba(23, 107, 135, 0.1)',
-                    borderWidth: 2.5,
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#176b87'
-                },
-                {
-                    label: 'Grau de Saturação Sr (%)',
-                    data: [45.0, 47.2, 48.0, 49.5, 50.8, 51.5, 52.3],
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    borderWidth: 2.5,
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#10b981'
-                }
-            ]
+  const config = {
+    type: "line",
+    data: data,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "top",
+          align: "end",
+          labels: {
+            boxWidth: 8,
+            usePointStyle: true,
+            font: { size: 11 }
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 0,
+          max: 100,
+          ticks: {
+            stepSize: 25,
+            callback: function (value) {
+              return value + "%";
+            }
+          },
+          grid: {
+            color: "#f1f5f9"
+          }
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        usePointStyle: true,
-                        font: { size: 12, weight: 'bold' }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: {
-                        callback: function(value) { return value + '%'; }
-                    }
-                }
-            }
+        x: {
+          grid: {
+            display: false
+          }
         }
-    });
-}
-
-// ESCUTA EM TEMPO REAL NO FIREBASE
-const monitoramentoRef = ref(database, "monitoramento");
-
-onValue(monitoramentoRef, (snapshot) => {
-    if (snapshot.exists()) {
-        const dados = snapshot.val();
-        const adcBruto = dados.leitura_bruta || dados.adc || dados.ADC;
-
-        if (adcBruto !== undefined) {
-            const umidadeCalculada = ((adcBruto / 4095) * 100).toFixed(1);
-            const saturacaoCalculada = (umidadeCalculada * 0.85).toFixed(1);
-
-            const humidityEl = document.getElementById("humidityValue");
-            const saturationEl = document.getElementById("saturationValue");
-            const lastUpdateEl = document.getElementById("lastUpdate");
-
-            if (humidityEl) humidityEl.textContent = umidadeCalculada;
-            if (saturationEl) saturationEl.textContent = saturacaoCalculada;
-
-            const agora = new Date().toLocaleTimeString('pt-BR');
-            if (lastUpdateEl) lastUpdateEl.textContent = agora;
-
-            if (monitoringChart) {
-                if (monitoringChart.data.labels.length >= 8) {
-                    monitoringChart.data.labels.shift();
-                    monitoringChart.data.datasets[0].data.shift();
-                    monitoringChart.data.datasets[1].data.shift();
-                }
-                
-                monitoringChart.data.labels.push(agora.slice(0, 5));
-                monitoringChart.data.datasets[0].data.push(Number(umidadeCalculada));
-                monitoringChart.data.datasets[1].data.push(Number(saturacaoCalculada));
-                monitoringChart.update();
-            }
-
-            if (typeof simularFarol === 'function') {
-                if (saturacaoCalculada >= 85) {
-                    simularFarol('vermelho');
-                } else if (saturacaoCalculada >= 60) {
-                    simularFarol('amarelo');
-                } else {
-                    simularFarol('verde');
-                }
-            }
-        }
+      }
     }
+  };
+
+  new Chart(ctx, config);
 });
