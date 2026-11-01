@@ -4,17 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Solum Engenharia - Monitoramento Geotécnico</title>
-  <!-- Link do CSS com parametro v=100 para forcar a limpeza do cache -->
-  <link rel="stylesheet" href="style.css?v=100">
-  <!-- Chart.js para os gráficos -->
+  <!-- v=101 para atualizar instantaneamente o cache -->
+  <link rel="stylesheet" href="style.css?v=101">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <div class="app-container">
     
-    <!-- Sidebar / Menu Lateral Escuro (Estreito) -->
+    <!-- Sidebar / Menu Lateral Escuro (Estreito 200px) -->
     <aside class="sidebar">
       <div class="sidebar-header">
         <div class="logo-icon">
@@ -89,7 +87,7 @@
       <!-- Grid Principal -->
       <div class="dashboard-grid">
         
-        <!-- Coluna Esquerda: Métricas e Gráfico -->
+        <!-- Coluna Esquerda: Métricas e Gráfico Ampliado -->
         <div class="metrics-column">
           
           <div class="cards-row">
@@ -122,7 +120,7 @@
             </div>
           </div>
 
-          <!-- Gráfico Histórico -->
+          <!-- Gráfico Ampliado -->
           <div class="chart-card">
             <div class="chart-header">
               <div class="chart-title">
@@ -199,6 +197,42 @@
         </aside>
 
       </div>
+
+      <!-- Nova Secção: Cards de Ações Rápidas -->
+      <section class="action-cards-grid">
+        <div class="action-card">
+          <div class="action-icon blue">
+            <i data-lucide="calendar-check"></i>
+          </div>
+          <div class="action-info">
+            <h4>Agendar Vistoria Técnica</h4>
+            <p>Solicite uma inspeção presencial da equipe de geotecnia.</p>
+          </div>
+          <button class="action-btn">Agendar</button>
+        </div>
+
+        <div class="action-card">
+          <div class="action-icon green">
+            <i data-lucide="user-check"></i>
+          </div>
+          <div class="action-info">
+            <h4>Falar com Engenheiro</h4>
+            <p>Contato direto com o responsável técnico do projeto.</p>
+          </div>
+          <button class="action-btn outline">Contato</button>
+        </div>
+
+        <div class="action-card">
+          <div class="action-icon orange">
+            <i data-lucide="file-text"></i>
+          </div>
+          <div class="action-info">
+            <h4>Relatório Geotécnico</h4>
+            <p>Gerar PDF completo com o histórico de telemetria.</p>
+          </div>
+          <button class="action-btn outline">Exportar</button>
+        </div>
+      </section>
 
       <!-- Rodapé -->
       <footer class="notice-footer">
